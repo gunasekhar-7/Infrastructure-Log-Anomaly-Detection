@@ -116,3 +116,4 @@ def test_parser_evaluator() -> None:
     assert metrics["throughput_logs_per_sec"] > 500
     assert metrics["unique_templates_mined"] >= 1
     assert metrics["template_stability_metric"] in ("STABLE", "GROWING")
+

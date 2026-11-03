@@ -129,3 +129,4 @@ class DrainParser:
         for idx, tmpl in enumerate(self.catalog.get_all_templates(), start=2):
             vocab[tmpl.template_id] = idx
         return vocab
+

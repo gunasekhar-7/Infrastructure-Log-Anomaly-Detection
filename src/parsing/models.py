@@ -67,3 +67,4 @@ class ParsedLogEvent(BaseModel):
             attributes=event.attributes,
             parsing_timestamp=datetime.now(timezone.utc),
         )
+

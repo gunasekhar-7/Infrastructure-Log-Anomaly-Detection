@@ -130,3 +130,4 @@ class TemplateCatalog:
         with self._lock:
             self._templates.clear()
             self._pattern_to_id.clear()
+

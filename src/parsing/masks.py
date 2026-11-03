@@ -37,3 +37,4 @@ def pre_mask_message(message: str) -> str:
     for pattern, mask in DEFAULT_MASKS:
         cleaned = re.sub(pattern, mask, cleaned)
     return cleaned
+
