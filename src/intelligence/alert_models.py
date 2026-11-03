@@ -76,3 +76,4 @@ class AuditLogEntry(BaseModel):
     action: str       # "CREATED", "STATUS_CHANGE", "ASSIGNED", "NOTE_ADDED", "CORRELATED"
     actor: str = "SYSTEM"
     details: dict[str, Any] = Field(default_factory=dict)
+

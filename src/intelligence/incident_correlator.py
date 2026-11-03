@@ -170,3 +170,4 @@ class IncidentCorrelator:
             if status:
                 return [i for i in incidents if i.status == status]
             return incidents
+

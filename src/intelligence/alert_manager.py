@@ -236,3 +236,4 @@ class AlertManager:
             details=details or {},
         )
         self._audit_log.append(entry)
+

@@ -196,3 +196,4 @@ def test_incident_correlation_separation_different_services(sample_anomaly: Dete
     assert inc1.incident_id != inc2.incident_id
     assert inc1.primary_service == "payment-service"
     assert inc2.primary_service == "auth-service"
+

@@ -80,3 +80,4 @@ class NotificationDispatcher:
             incident.incident_id,
         )
         return True
+
