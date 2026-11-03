@@ -216,3 +216,4 @@ class FrequencyFeatureExtractor:
             rows.append(row)
 
         return pd.DataFrame(rows)
+

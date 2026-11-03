@@ -191,3 +191,4 @@ class FeaturePipeline:
 
         logger.info("Loaded FeaturePipeline %s from %s", pipeline.version, in_dir)
         return pipeline
+

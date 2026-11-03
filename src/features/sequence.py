@@ -146,3 +146,4 @@ class SequenceFeatureExtractor:
         X = np.array([s.sequence_indices for s in samples], dtype=np.int64)
         y = np.array([s.next_index for s in samples], dtype=np.int64)
         return X, y
+

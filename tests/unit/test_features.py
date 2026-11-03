@@ -157,3 +157,4 @@ def test_feature_pipeline_fit_transform_and_persistence(tmp_path: Path) -> None:
     assert reloaded.is_fitted is True
     X_test_reloaded, _, _ = reloaded.transform_tabular(test_events)
     np.testing.assert_array_almost_equal(X_test, X_test_reloaded)
+
