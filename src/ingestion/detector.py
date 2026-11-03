@@ -4,6 +4,7 @@ from enum import Enum
 import json
 import re
 from typing import Any
+from src.ingestion.models import LogSeverity
 from src.ingestion.normalizer import normalize_severity, normalize_timestamp
 
 # Standard regexes for format identification
@@ -200,6 +201,6 @@ def parse_detected_line(line: str, expected_format: LogFormat | None = None) -> 
         "severity": LogSeverity.INFO,
         "message": stripped,
         "attributes": {},
-        "is_valid": False,
+        "is_valid": bool(stripped),
     }
 
