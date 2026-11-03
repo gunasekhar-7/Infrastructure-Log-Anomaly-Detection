@@ -76,3 +76,4 @@ def compare_models(
 
     df = pd.DataFrame(results)
     return df
+

@@ -199,3 +199,4 @@ class FrequencyAnomalyDetector(BaseAnomalyDetector):
         detector.training_metadata = data.get("training_metadata", {})
         detector.is_fitted = True
         return detector
+

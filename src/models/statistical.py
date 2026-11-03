@@ -140,3 +140,4 @@ class StatisticalDetector(BaseAnomalyDetector):
         detector.is_fitted = True
         detector.training_metadata = data.get("training_metadata", {})
         return detector
+

@@ -148,3 +148,4 @@ def test_compare_models_harness(synthetic_data: tuple) -> None:
     assert "recall" in results_df.columns
     assert "f1" in results_df.columns
     assert "roc_auc" in results_df.columns
+

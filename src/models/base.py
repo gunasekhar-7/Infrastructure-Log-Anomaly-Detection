@@ -166,3 +166,4 @@ class BaseAnomalyDetector(ABC):
             "score_std": round(float(np.std(scores)), 4),
             "score_max": round(float(np.max(scores)), 4),
         }
+

@@ -136,3 +136,4 @@ class IsolationForestDetector(BaseAnomalyDetector):
         detector.is_fitted = True
         detector.training_metadata = meta.get("training_metadata", {})
         return detector
+
