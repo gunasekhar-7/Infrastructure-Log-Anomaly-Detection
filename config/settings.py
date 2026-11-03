@@ -72,8 +72,13 @@ class AppSettings(BaseSettings):
     INCIDENT_CORRELATION_WINDOW_SECONDS: int = 600  # 10 minutes temporal clustering
     MIN_ALERT_SEVERITY: Literal["INFO", "LOW", "MEDIUM", "HIGH", "CRITICAL"] = "MEDIUM"
 
-    # Observability
+    # Observability & Production Hardening
     PROMETHEUS_ENABLED: bool = True
+    RATE_LIMIT_ENABLED: bool = True
+    RATE_LIMIT_PER_MINUTE: int = 120
+    MAX_INGEST_BATCH_SIZE: int = 5000
+    MAX_UPLOAD_FILE_BYTES: int = 25 * 1024 * 1024  # 25 MB
+    SECURITY_HEADERS_ENABLED: bool = True
 
 
 @lru_cache()

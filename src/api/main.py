@@ -10,7 +10,11 @@ from sqlalchemy import text
 
 from config.logging import get_logger
 from config.settings import settings
-from src.api.middleware import CorrelationAndTimingMiddleware
+from src.api.middleware import (
+    CorrelationAndTimingMiddleware,
+    RateLimitingMiddleware,
+    SecurityHeadersMiddleware,
+)
 from src.api.routes import (
     alerts_router,
     anomalies_router,
@@ -22,6 +26,7 @@ from src.api.routes import (
 )
 from src.api.schemas import HealthResponse
 from src.database.connection import close_db, get_engine, init_db
+from src.exceptions import LogPulseError
 
 logger = get_logger("api_main")
 
@@ -54,8 +59,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 2. Observability & Timing Middleware
+# 2. Security Headers Middleware
+app.add_middleware(SecurityHeadersMiddleware)
+
+# 3. Rate Limiting Middleware
+app.add_middleware(RateLimitingMiddleware)
+
+# 4. Observability & Timing Middleware
 app.add_middleware(CorrelationAndTimingMiddleware)
+
+
+# Global Exception Handlers
+@app.exception_handler(LogPulseError)
+async def handle_domain_error(request, exc: LogPulseError):
+    logger.error("Domain exception on %s: %s", request.url.path, exc)
+    return JSONResponse(
+        status_code=400,
+        content={"error": exc.__class__.__name__, "detail": str(exc)},
+    )
 
 # 3. Mount Routers under API_PREFIX (/api/v1)
 api_prefix = settings.API_PREFIX

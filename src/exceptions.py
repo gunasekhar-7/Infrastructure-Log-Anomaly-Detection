@@ -10,6 +10,10 @@ class LogPlatformException(Exception):
         self.details = details or {}
 
 
+# Platform alias
+LogPulseError = LogPlatformException
+
+
 class ConfigurationError(LogPlatformException):
     """Raised when environment or settings configuration is invalid."""
 

@@ -1,11 +1,20 @@
 """Log Ingestion API Endpoints."""
 
+from pathlib import Path
 import shutil
 from tempfile import NamedTemporaryFile
 from fastapi import APIRouter, BackgroundTasks, Depends, File, HTTPException, UploadFile, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from config.settings import settings
 from src.api.schemas import IngestJobResponse, IngestStreamRequest
+from src.api.telemetry import (
+    ALERTS_TRIGGERED_TOTAL,
+    ANOMALIES_DETECTED_TOTAL,
+    DRAIN3_TEMPLATES_GAUGE,
+    INCIDENTS_ACTIVE_GAUGE,
+    LOG_EVENTS_INGESTED_TOTAL,
+)
 from src.database.connection import get_db_session
 from src.database.models import (
     AlertORM,
@@ -39,6 +48,7 @@ async def process_log_events_pipeline(events, repo: DatabaseRepository, job_id: 
     orm_events = []
     for pe in parsed_events:
         await repo.upsert_template(pe.template_id, pe.template_text, pe.parameters)
+        LOG_EVENTS_INGESTED_TOTAL.labels(service=pe.service, severity=pe.severity.value).inc()
         orm_events.append(
             LogEventORM(
                 job_id=job_id,
@@ -55,6 +65,7 @@ async def process_log_events_pipeline(events, repo: DatabaseRepository, job_id: 
             )
         )
     await repo.create_log_events(orm_events)
+    DRAIN3_TEMPLATES_GAUGE.set(_drain_parser.get_template_count())
 
     # 2. Check for unseen templates or error spikes to trigger anomalies
     for pe in parsed_events:
@@ -91,6 +102,11 @@ async def process_log_events_pipeline(events, repo: DatabaseRepository, job_id: 
                 for ev in anomaly.supporting_evidence
             ]
             await repo.save_anomaly(anom_orm, evidence_orm)
+            ANOMALIES_DETECTED_TOTAL.labels(
+                algorithm=anomaly.algorithm,
+                severity=anomaly.severity.value,
+                category=anomaly.anomaly_category.value,
+            ).inc()
 
             # Route to alert manager and incident correlator
             alert = _alert_manager.process_anomaly(anomaly)
@@ -108,6 +124,10 @@ async def process_log_events_pipeline(events, repo: DatabaseRepository, job_id: 
                     repeat_count=alert.repeat_count,
                 )
                 await repo.save_alert(alert_orm)
+                ALERTS_TRIGGERED_TOTAL.labels(
+                    severity=alert.severity.value,
+                    service=alert.service,
+                ).inc()
 
                 # Correlate into incident
                 inc = _correlator.correlate_alert(alert, anomaly)
@@ -127,6 +147,7 @@ async def process_log_events_pipeline(events, repo: DatabaseRepository, job_id: 
                         summary=inc.summary,
                     )
                     await repo.save_incident(inc_orm)
+                    INCIDENTS_ACTIVE_GAUGE.labels(severity=inc.severity.value).inc()
                     alert_orm.incident_id = inc.incident_id
                     await repo.save_alert(alert_orm)
 
@@ -137,10 +158,29 @@ async def ingest_stream(
     session: AsyncSession = Depends(get_db_session),
 ) -> IngestJobResponse:
     """Ingest a batch of raw log lines directly via HTTP request."""
-    repo = DatabaseRepository(session)
-    job = await repo.create_job(source_name=payload.source_id, total_records=len(payload.lines))
+    # 1. Payload size guardrail
+    if len(payload.lines) > settings.MAX_INGEST_BATCH_SIZE:
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail=f"Batch size {len(payload.lines)} exceeds maximum permitted {settings.MAX_INGEST_BATCH_SIZE} lines.",
+        )
 
-    events, stats = _ingestion_engine.ingest_stream(payload.lines, source_id=payload.source_id)
+    # 2. Input sanitization (strip null bytes, control sequences, whitespace)
+    sanitized_lines = [
+        line.replace("\x00", "").strip()
+        for line in payload.lines
+        if line and line.strip()
+    ]
+    if not sanitized_lines:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Payload contains no valid non-empty log lines.",
+        )
+
+    repo = DatabaseRepository(session)
+    job = await repo.create_job(source_name=payload.source_id, total_records=len(sanitized_lines))
+
+    events, stats = _ingestion_engine.ingest_stream(sanitized_lines, source_id=payload.source_id)
 
     # Process pipeline
     await process_log_events_pipeline(events, repo, job.id)
@@ -174,15 +214,24 @@ async def upload_log_file(
     file: UploadFile = File(...),
     session: AsyncSession = Depends(get_db_session),
 ) -> IngestJobResponse:
-    """Upload a raw log file (.log, .txt, .json) for ingestion."""
+    """Upload a raw log file (.log, .txt, .json, .csv) for ingestion."""
+    # 1. Filename sanitization & extension check
+    safe_filename = Path(file.filename or "upload.log").name
+    ext = Path(safe_filename).suffix.lower()
+    if ext not in (".log", ".txt", ".json", ".csv"):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Unsupported file extension '{ext}'. Only .log, .txt, .json, .csv are permitted.",
+        )
+
     repo = DatabaseRepository(session)
-    job = await repo.create_job(source_name=file.filename or "upload")
+    job = await repo.create_job(source_name=safe_filename)
 
     with NamedTemporaryFile(delete=False, suffix=".log") as tmp:
         shutil.copyfileobj(file.file, tmp)
         tmp_path = tmp.name
 
-    events, stats = _ingestion_engine.ingest_file(tmp_path, source_id=file.filename or "upload")
+    events, stats = _ingestion_engine.ingest_file(tmp_path, source_id=safe_filename)
     await process_log_events_pipeline(events, repo, job.id)
 
     updated_job = await repo.update_job(

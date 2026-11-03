@@ -130,3 +130,7 @@ class DrainParser:
             vocab[tmpl.template_id] = idx
         return vocab
 
+    def get_template_count(self) -> int:
+        """Return total count of mined templates."""
+        return self.catalog.total_templates
+
