@@ -160,3 +160,4 @@ def test_anomaly_ensemble_detector(sequence_data: tuple) -> None:
     scores = ensemble.score_hybrid(X_tab_test, X_test, y_test)
     assert scores.shape == (20,)
     assert np.all((scores >= 0.0) & (scores <= 1.0))
+

@@ -98,3 +98,4 @@ class AnomalyEnsembleDetector(BaseAnomalyDetector):
     def load(cls, artifact_path: Path | str) -> "AnomalyEnsembleDetector":
         """Load constituent models from disk."""
         raise NotImplementedError("Use constituent model load functions and initialize Ensemble.")
+

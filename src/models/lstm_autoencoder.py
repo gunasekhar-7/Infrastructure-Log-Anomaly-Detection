@@ -240,3 +240,4 @@ class LSTMAutoencoderDetector(BaseAnomalyDetector):
         )
         detector.is_fitted = True
         return detector
+
