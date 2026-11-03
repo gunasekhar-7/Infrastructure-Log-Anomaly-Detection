@@ -92,3 +92,4 @@ Data leakage is the most pervasive failure mode in published log anomaly detecti
 | `data/processed/bgl_cleaned.csv` | 2,000 | ~350 KB | Auto-generated | Cleaned BGL with splits |
 | `data/processed/hdfs_splits_manifest.json`| - | ~1 KB | Auto-generated | HDFS split audit manifest |
 | `data/processed/bgl_splits_manifest.json` | - | ~1 KB | Auto-generated | BGL split audit manifest |
+

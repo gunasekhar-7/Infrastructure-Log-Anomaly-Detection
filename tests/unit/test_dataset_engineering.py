@@ -94,3 +94,4 @@ def test_bgl_data_pipeline_chronological() -> None:
 
     assert train_indices.max() < val_indices.min()
     assert val_indices.max() < test_indices.min()
+

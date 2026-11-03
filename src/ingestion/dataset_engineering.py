@@ -294,3 +294,4 @@ class BenchmarkDataPipeline:
 
         logger.info("BGL processing complete. Output: %s, Manifest: %s", bgl_processed_path, manifest_path)
         return df, manifest
+
