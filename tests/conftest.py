@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 
+import src.database.connection as db_conn
 from config.settings import AppSettings, get_settings
 
 
@@ -18,8 +19,12 @@ def test_env_setup(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Generator
     monkeypatch.setenv("LOG_LEVEL", "DEBUG")
     # Clear lru_cache for get_settings during testing
     get_settings.cache_clear()
+    db_conn._engine = None
+    db_conn._session_maker = None
     yield
     get_settings.cache_clear()
+    db_conn._engine = None
+    db_conn._session_maker = None
 
 
 @pytest.fixture

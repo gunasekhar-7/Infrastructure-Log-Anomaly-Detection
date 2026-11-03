@@ -61,7 +61,6 @@ class DatabaseRepository:
             job.error_message = error_message
             job.completed_at = datetime.now()
             await self.session.commit()
-            await self.session.refresh(job)
         return job
 
     async def get_job(self, job_id: str) -> IngestionJobORM | None:
@@ -98,17 +97,12 @@ class DatabaseRepository:
                     self.session.add(tmpl)
                 await self.session.commit()
                 return tmpl
-            except IntegrityError:
+            except (IntegrityError, OperationalError):
                 await self.session.rollback()
                 if attempt == 4:
                     existing = await self.session.get(LogTemplateORM, template_id)
                     if existing:
                         return existing
-                    raise
-                await asyncio.sleep(0.02 * (attempt + 1))
-            except OperationalError:
-                await self.session.rollback()
-                if attempt == 4:
                     raise
                 await asyncio.sleep(0.05 * (attempt + 1))
 

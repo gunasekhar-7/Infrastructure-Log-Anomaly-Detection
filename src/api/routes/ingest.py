@@ -1,6 +1,7 @@
 """Log Ingestion API Endpoints."""
 
 import shutil
+from datetime import datetime
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
@@ -188,15 +189,19 @@ async def ingest_stream(
 
     repo = DatabaseRepository(session)
     job = await repo.create_job(source_name=payload.source_id, total_records=len(sanitized_lines))
+    job_id = str(job.id)
+    source_name = str(job.source_name)
+    total_records = int(job.total_records)
+    started_at = job.started_at
 
     events, stats = _ingestion_engine.ingest_stream(sanitized_lines, source_id=payload.source_id)
 
     # Process pipeline
-    await process_log_events_pipeline(events, repo, job.id)
+    await process_log_events_pipeline(events, repo, job_id)
 
     # Update job
-    updated_job = await repo.update_job(
-        job_id=job.id,
+    await repo.update_job(
+        job_id=job_id,
         status="COMPLETED",
         valid_records=stats.valid_records,
         failed_records=stats.invalid_records,
@@ -205,16 +210,16 @@ async def ingest_stream(
     )
 
     return IngestJobResponse(
-        job_id=updated_job.id,
-        source_name=updated_job.source_name,
-        status=updated_job.status,
-        total_records=updated_job.total_records,
-        valid_records=updated_job.valid_records,
-        failed_records=updated_job.failed_records,
-        duration_ms=updated_job.duration_ms,
-        throughput_eps=updated_job.throughput_eps,
-        started_at=updated_job.started_at,
-        completed_at=updated_job.completed_at,
+        job_id=job_id,
+        source_name=source_name,
+        status="COMPLETED",
+        total_records=total_records,
+        valid_records=stats.valid_records,
+        failed_records=stats.invalid_records,
+        duration_ms=stats.duration_ms,
+        throughput_eps=stats.throughput_eps,
+        started_at=started_at,
+        completed_at=datetime.now(),
     )
 
 
@@ -235,16 +240,19 @@ async def upload_log_file(
 
     repo = DatabaseRepository(session)
     job = await repo.create_job(source_name=safe_filename)
+    job_id = str(job.id)
+    source_name = str(job.source_name)
+    started_at = job.started_at
 
     with NamedTemporaryFile(delete=False, suffix=".log") as tmp:
         shutil.copyfileobj(file.file, tmp)
         tmp_path = tmp.name
 
     events, stats = _ingestion_engine.ingest_file(tmp_path, source_id=safe_filename)
-    await process_log_events_pipeline(events, repo, job.id)
+    await process_log_events_pipeline(events, repo, job_id)
 
-    updated_job = await repo.update_job(
-        job_id=job.id,
+    await repo.update_job(
+        job_id=job_id,
         status="COMPLETED",
         valid_records=stats.valid_records,
         failed_records=stats.invalid_records,
@@ -253,16 +261,16 @@ async def upload_log_file(
     )
 
     return IngestJobResponse(
-        job_id=updated_job.id,
-        source_name=updated_job.source_name,
-        status=updated_job.status,
-        total_records=updated_job.total_records,
-        valid_records=updated_job.valid_records,
-        failed_records=updated_job.failed_records,
-        duration_ms=updated_job.duration_ms,
-        throughput_eps=updated_job.throughput_eps,
-        started_at=updated_job.started_at,
-        completed_at=updated_job.completed_at,
+        job_id=job_id,
+        source_name=source_name,
+        status="COMPLETED",
+        total_records=stats.total_records,
+        valid_records=stats.valid_records,
+        failed_records=stats.invalid_records,
+        duration_ms=stats.duration_ms,
+        throughput_eps=stats.throughput_eps,
+        started_at=started_at,
+        completed_at=datetime.now(),
     )
 
 

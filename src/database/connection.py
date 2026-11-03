@@ -2,6 +2,7 @@
 
 from collections.abc import AsyncGenerator
 
+from sqlalchemy import event
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -29,6 +30,7 @@ def get_engine() -> AsyncEngine:
         connect_args = {}
         if "sqlite" in db_url:
             connect_args["check_same_thread"] = False
+            connect_args["timeout"] = 60.0
 
         _engine = create_async_engine(
             db_url,
@@ -36,6 +38,16 @@ def get_engine() -> AsyncEngine:
             future=True,
             connect_args=connect_args,
         )
+
+        if "sqlite" in db_url:
+            @event.listens_for(_engine.sync_engine, "connect")
+            def set_sqlite_pragma(dbapi_connection, connection_record):
+                cursor = dbapi_connection.cursor()
+                cursor.execute("PRAGMA journal_mode=WAL")
+                cursor.execute("PRAGMA busy_timeout=60000")
+                cursor.execute("PRAGMA synchronous=NORMAL")
+                cursor.close()
+
         logger.info("Initialized AsyncEngine for %s", db_url.split("@")[-1])
     return _engine
 
