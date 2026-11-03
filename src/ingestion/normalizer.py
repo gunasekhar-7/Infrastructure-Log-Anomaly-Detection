@@ -88,3 +88,4 @@ def normalize_timestamp(raw_value: str | int | float | None) -> datetime:
 
     # Fallback to current time if unparseable
     return datetime.now(timezone.utc)
+

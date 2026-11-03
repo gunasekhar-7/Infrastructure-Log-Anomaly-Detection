@@ -202,3 +202,4 @@ def parse_detected_line(line: str, expected_format: LogFormat | None = None) -> 
         "attributes": {},
         "is_valid": False,
     }
+

@@ -43,3 +43,4 @@ def sanitize_line(raw_line: str) -> str:
         cleaned = cleaned[:MAX_LINE_LENGTH] + "...[TRUNCATED]"
 
     return cleaned
+

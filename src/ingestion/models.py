@@ -65,3 +65,4 @@ class DeadLetterRecord(BaseModel):
     raw_content: str
     failure_reason: str
     source_id: str
+

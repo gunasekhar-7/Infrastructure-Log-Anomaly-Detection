@@ -47,3 +47,4 @@ class DuplicateDetector:
     def clear(self) -> None:
         """Clear cache state."""
         self._seen_hashes.clear()
+

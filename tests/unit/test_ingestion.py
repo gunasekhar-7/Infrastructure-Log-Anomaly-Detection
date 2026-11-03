@@ -166,3 +166,4 @@ def test_ingestion_engine_json_records() -> None:
     assert events[0].service == "auth-svc"
     assert events[0].host == "auth-01"
     assert events[0].message == "Invalid JWT token"
+

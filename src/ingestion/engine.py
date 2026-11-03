@@ -192,3 +192,4 @@ class LogIngestionEngine:
         import json
         lines = [json.dumps(r) for r in records]
         return self.ingest_stream(lines, source_id=source_id, expected_format=LogFormat.JSON)
+

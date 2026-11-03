@@ -48,3 +48,4 @@ class DeadLetterQueue:
     def clear(self) -> None:
         """Clear queue entries."""
         self._queue.clear()
+
