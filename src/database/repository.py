@@ -1,8 +1,10 @@
 """Asynchronous Database Repository Abstractions."""
 
+import asyncio
 from datetime import datetime
 
 from sqlalchemy import desc, func, select
+from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database.models import (
@@ -74,25 +76,46 @@ class DatabaseRepository:
         template_id: str,
         template_pattern: str,
         sample_params: list | None = None,
+        count: int = 1,
     ) -> LogTemplateORM:
-        """Insert or increment template occurrence count."""
-        tmpl = await self.session.get(LogTemplateORM, template_id)
-        if tmpl:
-            tmpl.occurrence_count += 1
-            tmpl.template_pattern = template_pattern
-            tmpl.last_seen = datetime.now()
-            if sample_params:
-                tmpl.sample_parameters_json = sample_params[:5]
-        else:
-            tmpl = LogTemplateORM(
-                template_id=template_id,
-                template_pattern=template_pattern,
-                occurrence_count=1,
-                sample_parameters_json=sample_params[:5] if sample_params else [],
-            )
-            self.session.add(tmpl)
-        await self.session.commit()
-        return tmpl
+        """Insert or increment template occurrence count safely under concurrency."""
+        for attempt in range(5):
+            try:
+                tmpl = await self.session.get(LogTemplateORM, template_id)
+                if tmpl:
+                    tmpl.occurrence_count += count
+                    tmpl.template_pattern = template_pattern
+                    tmpl.last_seen = datetime.now()
+                    if sample_params:
+                        tmpl.sample_parameters_json = sample_params[:5]
+                else:
+                    tmpl = LogTemplateORM(
+                        template_id=template_id,
+                        template_pattern=template_pattern,
+                        occurrence_count=count,
+                        sample_parameters_json=sample_params[:5] if sample_params else [],
+                    )
+                    self.session.add(tmpl)
+                await self.session.commit()
+                return tmpl
+            except IntegrityError:
+                await self.session.rollback()
+                if attempt == 4:
+                    existing = await self.session.get(LogTemplateORM, template_id)
+                    if existing:
+                        return existing
+                    raise
+                await asyncio.sleep(0.02 * (attempt + 1))
+            except OperationalError:
+                await self.session.rollback()
+                if attempt == 4:
+                    raise
+                await asyncio.sleep(0.05 * (attempt + 1))
+
+        existing = await self.session.get(LogTemplateORM, template_id)
+        if existing:
+            return existing
+        raise RuntimeError(f"Failed to upsert template {template_id} after retries")
 
     async def get_templates(self, limit: int = 100, offset: int = 0) -> tuple[list[LogTemplateORM], int]:
         """List templates ordered by occurrence frequency."""

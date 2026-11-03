@@ -1,5 +1,6 @@
 """Drain3 Online Log Template Mining Engine."""
 
+import threading
 from pathlib import Path
 
 from drain3.file_persistence import FilePersistence
@@ -48,6 +49,7 @@ class DrainParser:
         # Optional persistence handler for Drain3 tree
         persistence = FilePersistence(str(self.state_file)) if self.state_file else None
 
+        self._lock = threading.Lock()
         self.miner = TemplateMiner(persistence_handler=persistence, config=config)
         logger.info(
             "DrainParser initialized (sim_th=%.2f, depth=%d, max_children=%d, state_file=%s)",
@@ -64,23 +66,24 @@ class DrainParser:
             return "E0", "", [], False
 
         try:
-            result = self.miner.add_log_message(clean_msg)
-            cluster_id = result["cluster_id"]
-            template_mined = result["template_mined"]
-            change_type = result["change_type"]
+            with self._lock:
+                result = self.miner.add_log_message(clean_msg)
+                cluster_id = result["cluster_id"]
+                template_mined = result["template_mined"]
+                change_type = result["change_type"]
 
-            # Extract dynamic parameters matching wildcards
-            raw_params = self.miner.extract_parameters(template_mined, clean_msg)
-            extracted_params: list[str] = (
-                [p.value for p in raw_params] if raw_params else []
-            )
+                # Extract dynamic parameters matching wildcards
+                raw_params = self.miner.extract_parameters(template_mined, clean_msg)
+                extracted_params: list[str] = (
+                    [p.value for p in raw_params] if raw_params else []
+                )
 
-            # Register with catalog
-            template_record, is_unseen = self.catalog.register_or_update(
-                cluster_id=cluster_id,
-                template_pattern=template_mined,
-                sample_params=extracted_params,
-            )
+                # Register with catalog
+                template_record, is_unseen = self.catalog.register_or_update(
+                    cluster_id=cluster_id,
+                    template_pattern=template_mined,
+                    sample_params=extracted_params,
+                )
 
             # Flag as unseen if either cluster was just created or catalog detected unseen
             unseen = is_unseen or (change_type == "cluster_created")

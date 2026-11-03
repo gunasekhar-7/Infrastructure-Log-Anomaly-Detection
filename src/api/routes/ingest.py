@@ -43,10 +43,20 @@ async def process_log_events_pipeline(events, repo: DatabaseRepository, job_id: 
     """Core asynchronous pipeline: Parse -> Store -> Detect Anomalies -> Alert -> Correlate."""
     parsed_events = _drain_parser.parse_batch(events)
 
-    # 1. Store templates and events
+    # 1. Store templates (aggregated by template_id to minimize write lock contention)
+    template_counts: dict[str, tuple[str, list, int]] = {}
+    for pe in parsed_events:
+        if pe.template_id in template_counts:
+            pattern, params, count = template_counts[pe.template_id]
+            template_counts[pe.template_id] = (pattern, params, count + 1)
+        else:
+            template_counts[pe.template_id] = (pe.template_text, pe.parameters, 1)
+
+    for tmpl_id, (pattern, params, count) in template_counts.items():
+        await repo.upsert_template(tmpl_id, pattern, params, count=count)
+
     orm_events = []
     for pe in parsed_events:
-        await repo.upsert_template(pe.template_id, pe.template_text, pe.parameters)
         LOG_EVENTS_INGESTED_TOTAL.labels(service=pe.service, severity=pe.severity.value).inc()
         orm_events.append(
             LogEventORM(
