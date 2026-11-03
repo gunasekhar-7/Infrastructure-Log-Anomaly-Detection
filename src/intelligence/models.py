@@ -1,9 +1,10 @@
 """Data models for Anomaly Assessment, Prioritization, and Explainability."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
-import uuid
+
 from pydantic import BaseModel, Field
 
 

@@ -1,7 +1,6 @@
 """Unit Tests for Benchmark Suite and Evaluation Metrics."""
 
 import numpy as np
-import pytest
 
 from scripts.run_benchmark import BenchmarkRunner, evaluate_predictions, generate_markdown_report
 
@@ -37,9 +36,28 @@ def test_evaluate_predictions_zero_division():
     assert metrics["confusion_matrix"]["fp"] == 0
 
 
-def test_benchmark_runner_data_loading():
+def test_benchmark_runner_data_loading(tmp_path):
     """Verify BenchmarkRunner loads and prepares features from the cleaned dataset."""
-    runner = BenchmarkRunner(data_path="data/processed/hdfs_cleaned.csv")
+    from pathlib import Path
+
+    import pandas as pd
+
+    data_file = Path("data/processed/hdfs_cleaned.csv")
+    if not data_file.exists():
+        data_file = tmp_path / "mock_hdfs.csv"
+        rows = []
+        for split in ["train", "val", "test"]:
+            for i in range(15):
+                rows.append({
+                    "split": split,
+                    "message": f"PacketResponder {i} for block blk_{split}_{i} terminating",
+                    "level": "INFO",
+                    "block_id": f"blk_{split}_{i}",
+                    "is_anomaly": 0 if split == "train" else (i % 5 == 0),
+                })
+        pd.DataFrame(rows).to_csv(data_file, index=False)
+
+    runner = BenchmarkRunner(data_path=str(data_file))
     data = runner.load_and_preprocess(sequence_window_size=5)
 
     assert "vocab" in data

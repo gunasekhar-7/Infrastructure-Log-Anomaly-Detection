@@ -1,9 +1,10 @@
 """Log Ingestion API Endpoints."""
 
-from pathlib import Path
 import shutil
+from pathlib import Path
 from tempfile import NamedTemporaryFile
-from fastapi import APIRouter, BackgroundTasks, Depends, File, HTTPException, UploadFile, status
+
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.settings import settings
@@ -21,13 +22,11 @@ from src.database.models import (
     AnomalyEvidenceORM,
     AnomalyORM,
     IncidentORM,
-    IngestionJobORM,
     LogEventORM,
 )
 from src.database.repository import DatabaseRepository
 from src.ingestion.engine import LogIngestionEngine
 from src.intelligence import AlertManager, AnomalyAssessor, IncidentCorrelator
-from src.models import IsolationForestDetector
 from src.parsing.drain_engine import DrainParser
 
 router = APIRouter(prefix="/ingest", tags=["Ingestion"])

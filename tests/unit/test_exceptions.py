@@ -1,6 +1,5 @@
 """Unit tests for platform exceptions."""
 
-import pytest
 from src.exceptions import (
     ConfigurationError,
     IngestionError,

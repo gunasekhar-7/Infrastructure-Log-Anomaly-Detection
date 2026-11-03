@@ -1,9 +1,10 @@
 """Data models for Alert Management, Incident Correlation, and Auditing."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
-import uuid
+
 from pydantic import BaseModel, Field
 
 from src.intelligence.models import AnomalySeverity, LogEvidenceItem

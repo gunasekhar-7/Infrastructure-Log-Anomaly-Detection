@@ -2,14 +2,14 @@
 
 import json
 from pathlib import Path
-from typing import Any
+
 import numpy as np
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, TensorDataset
 
 from config.logging import get_logger
-from src.exceptions import ModelInferenceError, ModelNotTrainedError
+from src.exceptions import ModelNotTrainedError
 from src.models.base import BaseAnomalyDetector
 
 logger = get_logger("deeplog_detector")
@@ -274,7 +274,7 @@ class DeepLogDetector(BaseAnomalyDetector):
         meta_file = path.with_suffix(".json")
         model_file = path.with_suffix(".pt")
 
-        with open(meta_file, "r", encoding="utf-8") as f:
+        with open(meta_file, encoding="utf-8") as f:
             meta = json.load(f)
 
         detector = cls(

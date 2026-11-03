@@ -1,6 +1,7 @@
 """Unit tests for Alert Management and Incident Correlation."""
 
 from datetime import datetime, timezone
+
 import pytest
 
 from src.intelligence import (
@@ -10,7 +11,6 @@ from src.intelligence import (
     AnomalyCategory,
     AnomalySeverity,
     DetectedAnomaly,
-    Incident,
     IncidentCorrelator,
     IncidentStatus,
     LogEvidenceItem,

@@ -1,7 +1,7 @@
 """Sequential Template Windowing and Tokenization for DeepLog Models."""
 
-from typing import Any
 import numpy as np
+
 from src.features.models import SequenceSample
 from src.parsing.models import ParsedLogEvent
 

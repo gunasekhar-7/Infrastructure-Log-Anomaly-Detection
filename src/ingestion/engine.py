@@ -1,18 +1,16 @@
 """Unified High-Throughput Log Ingestion Engine."""
 
+import time
 from collections.abc import Iterable
 from pathlib import Path
-import time
 from typing import Any
 
 from config.logging import get_logger
-from src.exceptions import IngestionError
 from src.ingestion.dead_letter import DeadLetterQueue
 from src.ingestion.deduplicator import DuplicateDetector
 from src.ingestion.detector import (
     LogFormat,
     detect_file_format,
-    detect_line_format,
     parse_detected_line,
 )
 from src.ingestion.models import (
@@ -162,7 +160,7 @@ class LogIngestionEngine:
 
         # Sample initial lines to auto-detect file format if not provided
         sample_lines: list[str] = []
-        with open(validated_path, "r", encoding="utf-8", errors="replace") as f:
+        with open(validated_path, encoding="utf-8", errors="replace") as f:
             for _ in range(30):
                 line = f.readline()
                 if not line:
@@ -173,7 +171,7 @@ class LogIngestionEngine:
         logger.info("Auto-detected format '%s' for file '%s'", detected_fmt.value, validated_path)
 
         def file_line_generator():
-            with open(validated_path, "r", encoding="utf-8", errors="replace") as f:
+            with open(validated_path, encoding="utf-8", errors="replace") as f:
                 for line in f:
                     yield line
 

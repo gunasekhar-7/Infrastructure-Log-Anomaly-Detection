@@ -2,7 +2,7 @@
 
 import json
 from pathlib import Path
-from typing import Any
+
 import numpy as np
 import torch
 import torch.nn as nn
@@ -147,7 +147,7 @@ class LSTMAutoencoderDetector(BaseAnomalyDetector):
             self.epochs,
         )
 
-        for epoch in range(1, self.epochs + 1):
+        for _epoch in range(1, self.epochs + 1):
             total_loss = 0.0
             for (batch_X,) in loader:
                 batch_X = batch_X.to(self.device)
@@ -224,7 +224,7 @@ class LSTMAutoencoderDetector(BaseAnomalyDetector):
         meta_file = path.with_suffix(".json")
         model_file = path.with_suffix(".pt")
 
-        with open(meta_file, "r", encoding="utf-8") as f:
+        with open(meta_file, encoding="utf-8") as f:
             meta = json.load(f)
 
         detector = cls(

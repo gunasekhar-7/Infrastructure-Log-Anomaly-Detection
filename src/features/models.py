@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from typing import Any
-import numpy as np
+
 from pydantic import BaseModel, Field
 
 

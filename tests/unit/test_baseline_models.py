@@ -1,6 +1,7 @@
 """Unit tests for Baseline Anomaly Detection Models."""
 
 from pathlib import Path
+
 import numpy as np
 import pytest
 
@@ -10,7 +11,6 @@ from src.models import (
     IsolationForestDetector,
     StatisticalDetector,
     compare_models,
-    evaluate_detector_on_splits,
 )
 
 

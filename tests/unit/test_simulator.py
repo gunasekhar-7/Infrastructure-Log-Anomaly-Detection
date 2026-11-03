@@ -1,6 +1,5 @@
 """Unit Tests for Traffic Simulator and Synthetic Workload Engine."""
 
-import pytest
 
 from scripts.generate_traffic import TrafficGenerator, TrafficProfile
 

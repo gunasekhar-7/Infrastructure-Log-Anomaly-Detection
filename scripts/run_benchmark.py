@@ -6,15 +6,20 @@ Runs ablation studies on sequence length, top-k candidates, and ensemble weighti
 """
 
 import argparse
-from datetime import datetime, timezone
 import json
-from pathlib import Path
 import sys
 import time
+from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
+
 import numpy as np
 import pandas as pd
-from sklearn.metrics import average_precision_score, confusion_matrix, precision_recall_curve, roc_auc_score
+from sklearn.metrics import (
+    average_precision_score,
+    confusion_matrix,
+    roc_auc_score,
+)
 
 # Ensure repository root is on sys.path
 BASE_DIR = Path(__file__).resolve().parent.parent

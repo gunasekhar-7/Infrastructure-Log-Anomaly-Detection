@@ -1,7 +1,8 @@
 """Robustness, Concurrency, and Fuzz Testing for Log Ingestion & Inference."""
 
-from concurrent.futures import ThreadPoolExecutor
 import json
+from concurrent.futures import ThreadPoolExecutor
+
 import pytest
 from fastapi.testclient import TestClient
 

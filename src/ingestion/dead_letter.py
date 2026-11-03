@@ -2,8 +2,9 @@
 
 from collections import deque
 from pathlib import Path
-from src.ingestion.models import DeadLetterRecord
+
 from config.logging import get_logger
+from src.ingestion.models import DeadLetterRecord
 
 logger = get_logger("dead_letter_queue")
 

@@ -127,7 +127,7 @@ class BenchmarkDataPipeline:
             raise FileNotFoundError(f"HDFS raw log not found at {self.raw_hdfs}")
 
         records: list[dict[str, Any]] = []
-        with open(self.raw_hdfs, "r", encoding="utf-8", errors="replace") as f:
+        with open(self.raw_hdfs, encoding="utf-8", errors="replace") as f:
             for idx, line in enumerate(f):
                 parsed = parse_hdfs_line(idx, line)
                 if parsed:
@@ -237,7 +237,7 @@ class BenchmarkDataPipeline:
             raise FileNotFoundError(f"BGL raw log not found at {self.raw_bgl}")
 
         records: list[dict[str, Any]] = []
-        with open(self.raw_bgl, "r", encoding="utf-8", errors="replace") as f:
+        with open(self.raw_bgl, encoding="utf-8", errors="replace") as f:
             for idx, line in enumerate(f):
                 parsed = parse_bgl_line(idx, line)
                 if parsed:

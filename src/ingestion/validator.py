@@ -1,6 +1,7 @@
 """Log Input Validation and Sanitization."""
 
 from pathlib import Path
+
 from src.exceptions import IngestionError
 
 MAX_LINE_LENGTH = 32_768  # 32 KB per log line safeguard

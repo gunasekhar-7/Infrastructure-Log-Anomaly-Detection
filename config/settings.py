@@ -81,7 +81,7 @@ class AppSettings(BaseSettings):
     SECURITY_HEADERS_ENABLED: bool = True
 
 
-@lru_cache()
+@lru_cache
 def get_settings() -> AppSettings:
     """Retrieve cached application settings singleton."""
     return AppSettings()

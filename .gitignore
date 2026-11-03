@@ -35,11 +35,11 @@ ENV/
 env.bak/
 venv.bak/
 
-# Data directories (keep directory structure with .gitkeep)
-data/raw/*
-!data/raw/.gitkeep
-data/processed/*
-!data/processed/.gitkeep
+# Data directories (keep 2k benchmark samples & processed data; ignore huge downloads)
+data/raw/**/*.tar.gz
+data/raw/**/*.zip
+data/raw/**/HDFS.log
+data/raw/**/BGL.log
 data/synthetic/*
 !data/synthetic/.gitkeep
 
@@ -67,9 +67,11 @@ Thumbs.db
 
 # Logs and test outputs
 *.log
+!data/raw/**/*.log
 logs/
 .pytest_cache/
 .coverage
+coverage.xml
 htmlcov/
 .mypy_cache/
 .ruff_cache/

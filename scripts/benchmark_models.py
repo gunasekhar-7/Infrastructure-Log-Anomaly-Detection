@@ -1,10 +1,10 @@
 """Benchmark Comparison Script across Statistical, Isolation Forest, and DeepLog Models."""
 
-import json
-from pathlib import Path
 import sys
 import time
+from pathlib import Path
 from typing import Any
+
 import numpy as np
 import pandas as pd
 
@@ -144,8 +144,7 @@ def run_benchmark() -> pd.DataFrame:
     t_inf = time.perf_counter()
     val_scores_dl = deeplog_model.score_sequences(X_seq_vl, y_seq_vl)
     deeplog_model.calibrate_threshold(val_scores_dl, val_labels=y_val)
-    dl_scores_ts = deeplog_model.score_sequences(X_seq_ts, y_seq_ts)
-    preds_dl = (dl_scores_ts >= deeplog_model.threshold).astype(int)
+    _ = deeplog_model.score_sequences(X_seq_ts, y_seq_ts)
     inf_time_dl = (time.perf_counter() - t_inf) / len(X_seq_ts) * 1000.0
 
     dl_metrics = deeplog_model.evaluate(

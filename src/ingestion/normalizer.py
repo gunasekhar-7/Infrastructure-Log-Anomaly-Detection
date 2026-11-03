@@ -1,7 +1,8 @@
 """Normalization of Timestamps, Severities, and Log Entities."""
 
-from datetime import datetime, timezone
 import re
+from datetime import datetime, timezone
+
 from src.ingestion.models import LogSeverity
 
 SEVERITY_MAP = {

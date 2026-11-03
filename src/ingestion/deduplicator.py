@@ -1,8 +1,7 @@
 """Sliding Window Log Duplicate Detection."""
 
-from collections import OrderedDict
 import hashlib
-from typing import Any
+from collections import OrderedDict
 
 
 class DuplicateDetector:

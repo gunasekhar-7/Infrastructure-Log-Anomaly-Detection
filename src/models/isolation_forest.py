@@ -2,7 +2,7 @@
 
 import json
 from pathlib import Path
-from typing import Any
+
 import joblib
 import numpy as np
 from sklearn.ensemble import IsolationForest
@@ -119,7 +119,7 @@ class IsolationForestDetector(BaseAnomalyDetector):
         meta_file = path.with_suffix(".json")
         model_file = path.with_suffix(".joblib")
 
-        with open(meta_file, "r", encoding="utf-8") as f:
+        with open(meta_file, encoding="utf-8") as f:
             meta = json.load(f)
 
         params = meta.get("hyperparameters", {})

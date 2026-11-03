@@ -1,9 +1,9 @@
 """Unit tests for Advanced Sequential Deep Learning Models (DeepLog & LSTM Autoencoder)."""
 
 from pathlib import Path
+
 import numpy as np
 import pytest
-import torch
 
 from src.models import (
     AnomalyEnsembleDetector,

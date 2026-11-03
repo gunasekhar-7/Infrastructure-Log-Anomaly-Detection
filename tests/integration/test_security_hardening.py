@@ -1,6 +1,7 @@
 """Integration Tests for Security Hardening, Rate Limiting, Input Sanitization & Telemetry."""
 
 import io
+
 import pytest
 from fastapi.testclient import TestClient
 

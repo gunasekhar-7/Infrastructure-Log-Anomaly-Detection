@@ -1,7 +1,7 @@
 """Template Store and Catalog for Drain3 Mined Templates."""
 
-from datetime import datetime, timezone
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 from threading import RLock
 from typing import Any
@@ -105,7 +105,7 @@ class TemplateCatalog:
         if not src or not src.exists():
             return
 
-        with open(src, "r", encoding="utf-8") as f:
+        with open(src, encoding="utf-8") as f:
             data: dict[str, Any] = json.load(f)
 
         with self._lock:

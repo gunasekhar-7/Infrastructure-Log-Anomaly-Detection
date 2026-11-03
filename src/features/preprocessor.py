@@ -3,6 +3,7 @@
 import json
 from pathlib import Path
 from typing import Any
+
 import joblib
 import numpy as np
 import pandas as pd
@@ -11,7 +12,7 @@ from sklearn.preprocessing import StandardScaler
 from config.logging import get_logger
 from src.exceptions import FeatureExtractionError
 from src.features.frequency import FrequencyFeatureExtractor
-from src.features.models import FeatureDataset, WindowFeatureRecord
+from src.features.models import WindowFeatureRecord
 from src.features.sequence import SequenceFeatureExtractor
 from src.parsing.models import ParsedLogEvent
 
@@ -172,10 +173,10 @@ class FeaturePipeline:
     def load(cls, artifact_dir: Path | str) -> "FeaturePipeline":
         """Load fitted pipeline instance from serialized artifacts."""
         in_dir = Path(artifact_dir)
-        with open(in_dir / "vocabulary.json", "r", encoding="utf-8") as f:
+        with open(in_dir / "vocabulary.json", encoding="utf-8") as f:
             vocab = json.load(f)
 
-        with open(in_dir / "metadata.json", "r", encoding="utf-8") as f:
+        with open(in_dir / "metadata.json", encoding="utf-8") as f:
             meta = json.load(f)
 
         pipeline = cls(

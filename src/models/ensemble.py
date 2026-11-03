@@ -1,7 +1,7 @@
 """Weighted Ensemble Anomaly Detector combining Tabular and Sequential Models."""
 
 from pathlib import Path
-from typing import Any
+
 import numpy as np
 
 from config.logging import get_logger

@@ -2,7 +2,6 @@
 
 from datetime import datetime, timezone
 from threading import RLock
-from typing import Any
 
 from config.logging import get_logger
 from src.intelligence.alert_models import Alert, Incident, IncidentStatus

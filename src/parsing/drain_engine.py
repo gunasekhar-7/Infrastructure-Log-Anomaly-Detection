@@ -1,7 +1,6 @@
 """Drain3 Online Log Template Mining Engine."""
 
 from pathlib import Path
-from typing import Any
 
 from drain3.file_persistence import FilePersistence
 from drain3.template_miner import TemplateMiner

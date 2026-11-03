@@ -1,8 +1,7 @@
 """Factual Evidence and Explainability Engine for Detected Anomalies."""
 
-from typing import Any
 from src.features.models import SequenceSample, WindowFeatureRecord
-from src.intelligence.models import AnomalyCategory, LogEvidenceItem
+from src.intelligence.models import LogEvidenceItem
 from src.parsing.models import ParsedLogEvent
 
 

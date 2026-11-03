@@ -1,9 +1,10 @@
 """Data models and schemas for the Log Ingestion Engine."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
-import uuid
+
 from pydantic import BaseModel, Field
 
 

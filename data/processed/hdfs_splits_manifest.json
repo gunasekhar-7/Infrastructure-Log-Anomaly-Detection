@@ -1,0 +1,20 @@
+{
+  "dataset": "HDFS_2k",
+  "total_records": 2000,
+  "valid_records": 2000,
+  "unique_blocks": 1994,
+  "normal_blocks": 1926,
+  "anomaly_blocks": 68,
+  "splits": {
+    "train_records": 1544,
+    "val_records": 227,
+    "test_records": 229,
+    "train_blocks": 1540,
+    "val_blocks": 226,
+    "test_blocks": 228,
+    "test_anomaly_records": 35,
+    "val_anomaly_records": 34
+  },
+  "leakage_check_passed": true,
+  "created_at": "2026-11-03T13:54:38.703124+00:00"
+}

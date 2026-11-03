@@ -1,7 +1,7 @@
 """Unit tests for the Log Ingestion Subsystem."""
 
-import json
 from pathlib import Path
+
 import pytest
 
 from src.exceptions import IngestionError
@@ -12,7 +12,6 @@ from src.ingestion import (
     LogIngestionEngine,
     LogSeverity,
     ParsingStatus,
-    detect_file_format,
     detect_line_format,
     normalize_severity,
     normalize_timestamp,

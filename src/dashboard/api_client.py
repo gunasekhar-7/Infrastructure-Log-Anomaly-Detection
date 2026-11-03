@@ -2,6 +2,7 @@
 
 import os
 from typing import Any
+
 import httpx
 
 from config.logging import get_logger
@@ -32,6 +33,7 @@ class DashboardAPIClient:
         # Fallback to in-process FastAPI TestClient for seamless zero-daemon demo
         if self._test_client is None:
             from fastapi.testclient import TestClient
+
             from src.api.main import app
             self._test_client = TestClient(app)
             logger.info("DashboardAPIClient operating in zero-daemon direct app mode.")

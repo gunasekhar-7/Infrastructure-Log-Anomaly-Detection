@@ -1,9 +1,9 @@
 """SQLAlchemy 2.0 ORM Entities for Application State and Telemetry."""
 
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+
 from sqlalchemy import (
-    BigInteger,
     Boolean,
     DateTime,
     Float,
@@ -13,8 +13,7 @@ from sqlalchemy import (
     String,
     Text,
 )
-from sqlalchemy.dialects.postgresql import JSONB
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.types import JSON
 
 

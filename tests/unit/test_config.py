@@ -1,6 +1,5 @@
 """Unit tests for configuration loading and validation."""
 
-import os
 from config.settings import AppSettings, get_settings
 
 

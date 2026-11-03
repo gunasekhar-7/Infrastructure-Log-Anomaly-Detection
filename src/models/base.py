@@ -3,6 +3,7 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any
+
 import numpy as np
 from sklearn.metrics import (
     accuracy_score,
@@ -78,7 +79,7 @@ class BaseAnomalyDetector(ABC):
             # Optimize F1 score over candidate thresholds
             precisions, recalls, thresholds = precision_recall_curve(val_labels, val_scores)
             f1_scores = np.zeros_like(thresholds)
-            for i, t in enumerate(thresholds):
+            for i, _ in enumerate(thresholds):
                 p = precisions[i]
                 r = recalls[i]
                 f1_scores[i] = (2 * p * r) / (p + r) if (p + r) > 0 else 0.0

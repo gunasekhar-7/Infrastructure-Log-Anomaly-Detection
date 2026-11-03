@@ -5,12 +5,12 @@ and drift anomalies against the LogPulse AnomalyGuard ingestion pipeline.
 """
 
 import argparse
-from datetime import datetime, timezone
 import json
-from pathlib import Path
 import random
 import sys
 import time
+from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
 # Ensure repository root is on sys.path
@@ -56,7 +56,7 @@ class TrafficProfile:
         return [
             f"081109 203518 143 WARN auth.SecurityManager: Authentication failed for user {user} from {ip}: invalid password hash",
             f"081109 203519 144 ERROR auth.SecurityManager: Brute force rate limit exceeded for IP {ip}: 50 failed attempts in 3s",
-            f"081109 203520 145 ERROR security.AccessController: Access denied to secret resource /vault/credentials/production_db for service auth_service",
+            "081109 203520 145 ERROR security.AccessController: Access denied to secret resource /vault/credentials/production_db for service auth_service",
         ]
 
     @staticmethod
@@ -75,8 +75,8 @@ class TrafficProfile:
         return [
             f"081109 203521 146 INFO k8s.NodeLifecycleController: Node worker-gpu-{shard}.cloud.internal cordoned due to KernelDeadlock condition",
             f"081109 203522 147 WARN envoy.mesh.proxy: Upstream cluster database_shard_{shard} circuit breaker tripped with 503 response",
-            f"081109 203523 148 ERROR telemetry.otel.exporter: Collector endpoint unreachable at grpc://otel-collector:4317: deadline exceeded",
-            f"- 1117838573 2005.06.03 R02-M1-N0-C:J12-U11 2005-06-03-15.42.53.882910 R02-M1-N0-C:J12-U11 RAS HARDWARE ERROR card unresponsive",
+            "081109 203523 148 ERROR telemetry.otel.exporter: Collector endpoint unreachable at grpc://otel-collector:4317: deadline exceeded",
+            "- 1117838573 2005.06.03 R02-M1-N0-C:J12-U11 2005-06-03-15.42.53.882910 R02-M1-N0-C:J12-U11 RAS HARDWARE ERROR card unresponsive",
         ]
 
 
@@ -141,6 +141,7 @@ class TrafficGenerator:
         if not dry_run:
             if in_process:
                 from fastapi.testclient import TestClient
+
                 from src.api.main import app
                 client = TestClient(app)
             else:

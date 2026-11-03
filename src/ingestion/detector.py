@@ -1,9 +1,10 @@
 """Automatic Log Format Detection and Line Parsing."""
 
-from enum import Enum
 import json
 import re
+from enum import Enum
 from typing import Any
+
 from src.ingestion.models import LogSeverity
 from src.ingestion.normalizer import normalize_severity, normalize_timestamp
 
@@ -71,7 +72,7 @@ def detect_file_format(sample_lines: list[str]) -> LogFormat:
     if not sample_lines:
         return LogFormat.RAW
 
-    counts: dict[LogFormat, int] = {fmt: 0 for fmt in LogFormat}
+    counts: dict[LogFormat, int] = dict.fromkeys(LogFormat, 0)
     for line in sample_lines[:50]:  # Sample up to 50 lines
         fmt = detect_line_format(line)
         counts[fmt] += 1

@@ -1,6 +1,7 @@
 """Masking rules and regular expressions for dynamic parameter normalization in Drain3."""
 
 import re
+
 from drain3.masking import MaskingInstruction
 
 # Pre-compiled masking patterns

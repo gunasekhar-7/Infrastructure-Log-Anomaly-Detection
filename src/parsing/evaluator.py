@@ -2,9 +2,10 @@
 
 import time
 from typing import Any
+
+from config.logging import get_logger
 from src.ingestion.models import LogEvent
 from src.parsing.drain_engine import DrainParser
-from config.logging import get_logger
 
 logger = get_logger("parser_evaluator")
 
@@ -38,7 +39,6 @@ class ParserEvaluator:
         throughput = (total_logs / duration_sec) if duration_sec > 0 else 0.0
 
         # Template stability: ratio of templates discovered in second half vs first half of stream
-        halfway = len(events) // 2
         first_half_templates = new_template_counts[0] if new_template_counts else 0
         total_final_templates = self.parser.catalog.total_templates
         second_half_growth = total_final_templates - first_half_templates

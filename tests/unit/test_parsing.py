@@ -1,12 +1,10 @@
 """Unit tests for Drain3 Log Parsing and Template Mining."""
 
 from pathlib import Path
-import pytest
 
 from src.ingestion.models import LogEvent, LogSeverity
 from src.parsing import (
     DrainParser,
-    LogTemplate,
     ParsedLogEvent,
     ParserEvaluator,
     TemplateCatalog,

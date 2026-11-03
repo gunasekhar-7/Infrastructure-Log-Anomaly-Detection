@@ -33,7 +33,6 @@ def render_anomaly_inspector_view(client: DashboardAPIClient):
 
     # 2. Select Anomaly
     st.subheader(f"Flagged Anomalies ({len(items)} found)")
-    df_anom = pd.DataFrame(items)
     selected_idx = st.selectbox(
         "Choose Anomaly for Investigation",
         options=range(len(items)),

@@ -1,13 +1,10 @@
 """Anomaly Assessment and Prioritization Engine."""
 
-from datetime import datetime, timezone
-from typing import Any
 
 from src.features.models import SequenceSample, WindowFeatureRecord
 from src.intelligence.explainer import AnomalyExplainer
 from src.intelligence.models import (
     AnomalyCategory,
-    AnomalySeverity,
     DetectedAnomaly,
     InvestigationStatus,
 )

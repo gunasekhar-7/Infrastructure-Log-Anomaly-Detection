@@ -2,17 +2,17 @@
 
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-import numpy as np
-import pytest
 
-from src.ingestion.models import LogEvent, LogSeverity
-from src.parsing.models import ParsedLogEvent
+import numpy as np
+
 from src.features import (
     FeaturePipeline,
     FrequencyFeatureExtractor,
     SequenceFeatureExtractor,
     calculate_entropy,
 )
+from src.ingestion.models import LogSeverity
+from src.parsing.models import ParsedLogEvent
 
 
 def create_sample_parsed_events(count: int = 50, has_errors: bool = True) -> list[ParsedLogEvent]:

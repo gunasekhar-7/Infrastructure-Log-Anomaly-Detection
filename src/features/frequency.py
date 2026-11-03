@@ -1,15 +1,16 @@
 """Event Frequency, Volumetric, and Temporal Feature Extraction."""
 
+import math
 from collections import Counter
 from datetime import timedelta
-import math
 from typing import Any
+
 import numpy as np
 import pandas as pd
 
+from src.features.models import WindowFeatureRecord
 from src.ingestion.models import LogSeverity
 from src.parsing.models import ParsedLogEvent
-from src.features.models import WindowFeatureRecord
 
 
 def calculate_entropy(counts: list[int] | Counter) -> float:
@@ -60,10 +61,6 @@ class FrequencyFeatureExtractor:
         records: list[WindowFeatureRecord] = []
         cur_start = start_bound
         win_idx = 0
-
-        # Two-pointer or linear scan for window events
-        event_idx = 0
-        total_events = len(sorted_events)
 
         while cur_start <= end_bound:
             cur_end = cur_start + window_duration

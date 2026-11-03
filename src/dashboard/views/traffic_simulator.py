@@ -4,7 +4,6 @@ import streamlit as st
 
 from src.dashboard.api_client import DashboardAPIClient
 
-
 PRESET_BENIGN_HDFS = [
     "081109 203518 143 INFO dfs.DataNode$DataXceiver: Receiving block blk_-1608999614823707180 src: /10.250.19.102:54106 dest: /10.250.19.102:50010",
     "081109 203519 145 INFO dfs.DataNode$PacketResponder: PacketResponder 1 for block blk_-1608999614823707180 terminating",

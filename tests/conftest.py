@@ -1,6 +1,5 @@
 """Global Pytest Fixtures and Test Environment Setup."""
 
-import os
 from collections.abc import Generator
 from pathlib import Path
 

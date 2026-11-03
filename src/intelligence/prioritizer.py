@@ -1,6 +1,5 @@
 """Contextual Multi-Factor Anomaly Severity Prioritizer."""
 
-from typing import Any
 from src.intelligence.models import AnomalyCategory, AnomalySeverity
 
 

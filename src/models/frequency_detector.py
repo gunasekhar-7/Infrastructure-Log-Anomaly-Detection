@@ -1,9 +1,9 @@
 """Frequency-Based and Rare Pattern Anomaly Detector."""
 
-from collections import Counter
 import json
+from collections import Counter
 from pathlib import Path
-from typing import Any
+
 import numpy as np
 
 from config.logging import get_logger
@@ -184,7 +184,7 @@ class FrequencyAnomalyDetector(BaseAnomalyDetector):
     def load(cls, artifact_path: Path | str) -> "FrequencyAnomalyDetector":
         """Load detector from JSON file."""
         path = Path(artifact_path)
-        with open(path, "r", encoding="utf-8") as f:
+        with open(path, encoding="utf-8") as f:
             data = json.load(f)
 
         detector = cls(

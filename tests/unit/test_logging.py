@@ -2,7 +2,8 @@
 
 import json
 import logging
-from config.logging import JSONFormatter, setup_logging, get_logger
+
+from config.logging import JSONFormatter, get_logger, setup_logging
 
 
 def test_json_formatter() -> None:

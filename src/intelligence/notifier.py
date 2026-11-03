@@ -1,6 +1,7 @@
 """Notification and Webhook Dispatcher for Alerts and Incidents."""
 
 from typing import Any
+
 import httpx
 
 from config.logging import get_logger
