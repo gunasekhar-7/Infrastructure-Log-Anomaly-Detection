@@ -26,3 +26,4 @@ def test_settings_custom_env(monkeypatch) -> None:
     assert custom_settings.APP_NAME == "CustomLogPulse"
     assert custom_settings.DRAIN3_SIM_TH == 0.75
     assert custom_settings.ALERT_COOLDOWN_SECONDS == 60
+

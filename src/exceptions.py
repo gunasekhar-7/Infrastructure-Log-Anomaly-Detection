@@ -60,3 +60,4 @@ class IncidentCorrelationError(LogPlatformException):
 
 class DatabaseError(LogPlatformException):
     """Raised during database session, transaction, or ORM operations."""
+

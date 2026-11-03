@@ -37,3 +37,4 @@ def test_setup_logging() -> None:
 
     # Revert to console for default runs
     setup_logging(level="INFO", json_format=False)
+

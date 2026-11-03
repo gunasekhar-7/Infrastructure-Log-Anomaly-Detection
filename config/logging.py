@@ -80,3 +80,4 @@ def setup_logging(
 def get_logger(name: str) -> logging.Logger:
     """Retrieve named logger."""
     return logging.getLogger(name)
+

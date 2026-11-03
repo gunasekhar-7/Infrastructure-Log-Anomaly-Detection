@@ -33,3 +33,4 @@ def test_exception_attributes() -> None:
     assert str(exc) == "Unrecognized log format"
     assert exc.details["line"] == "malformed string"
     assert exc.details["parser"] == "drain3"
+

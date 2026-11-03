@@ -27,3 +27,4 @@ def test_env_setup(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Generator
 def mock_settings() -> AppSettings:
     """Fixture providing fresh test settings."""
     return get_settings()
+

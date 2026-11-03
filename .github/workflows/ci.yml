@@ -76,3 +76,4 @@ jobs:
           file: docker/Dockerfile.dashboard
           push: false
           tags: logpulse-dashboard:test
+

@@ -84,3 +84,4 @@ def get_settings() -> AppSettings:
 
 # Global settings instance
 settings = get_settings()
+
