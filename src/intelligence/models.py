@@ -61,3 +61,4 @@ class DetectedAnomaly(BaseModel):
     supporting_evidence: list[LogEvidenceItem] = Field(default_factory=list)
     investigation_status: InvestigationStatus = InvestigationStatus.UNINVESTIGATED
     context_metadata: dict[str, Any] = Field(default_factory=dict)
+

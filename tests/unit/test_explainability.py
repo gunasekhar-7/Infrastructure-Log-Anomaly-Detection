@@ -184,3 +184,4 @@ def test_anomaly_assessor_window(sample_events: list[ParsedLogEvent]) -> None:
     assert anomaly.service == "auth-service"
     assert anomaly.investigation_status == InvestigationStatus.UNINVESTIGATED
     assert len(anomaly.supporting_evidence) > 0
+

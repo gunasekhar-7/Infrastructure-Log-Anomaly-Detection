@@ -168,3 +168,4 @@ class AnomalyAssessor:
                 "component": event.component,
             },
         )
+
